@@ -41,15 +41,12 @@ A comprehensive web application that enables farmers to generate detailed seed h
 
 ## 🚀 Quick Start
 
-### Clone the Repository
-
-```bash
-git clone https://github.com/ins-vj/SAARG.git
-cd SAARG
-```
-
 ### Installation
 ```bash
+# Clone the Repository
+git clone https://github.com/ins-vj/SAARG.git
+cd SAARG
+
 # Install dependencies
 npm install
 
