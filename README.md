@@ -1,4 +1,4 @@
-# 🌾 FarmReport - Advanced Seed Health Analysis Platform
+# 🌾 SAARG - Seed Analysis And Report Generator
 
 A comprehensive web application that enables farmers to generate detailed seed health analysis reports using hardware integration, machine learning, and professional PDF generation.
 
@@ -41,14 +41,22 @@ A comprehensive web application that enables farmers to generate detailed seed h
 
 ## 🚀 Quick Start
 
+### Clone the Repository
+
+```bash
+git clone https://github.com/ins-vj/SAARG.git
+cd SAARG
+```
+
 ### Installation
 ```bash
 # Install dependencies
 npm install
 
 # Set up environment
-echo "NEXT_PUBLIC_SUPABASE_URL=your_url" > .env.local
-echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key" >> .env.local
+touch .env.local
+NEXT_PUBLIC_SUPABASE_URL=your_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
 
 # Run development server
 npm run dev
@@ -56,8 +64,8 @@ npm run dev
 
 ### First Use
 1. Visit `http://localhost:3000`
-2. Click "Sign in with Google" or create account
-3. Click "Generate Report" on dashboard
+2. Click "Sign in with Google" or create an account
+3. Click "Generate Report" on the dashboard
 4. Confirm seed placement
 5. View and download PDF
 
@@ -76,7 +84,7 @@ For detailed setup instructions, see **[QUICKSTART.md](./QUICKSTART.md)**
 ## 🏗️ Architecture
 
 ```
-FarmReport Application Architecture
+SAARG Application Architecture
 │
 ├── Frontend Layer (Next.js)
 │   ├── Login Page (/ )
@@ -268,7 +276,7 @@ To extend the project:
 2. Use TypeScript for type safety
 3. Test on multiple devices
 4. Update documentation
-5. Create pull request
+5. Create a pull request
 
 ## 📞 Support
 
@@ -305,10 +313,10 @@ Built with:
 ## 🎯 Usage Scenarios
 
 ### Farmer Workflow
-1. Login with Google account
-2. Navigate to dashboard
-3. Click "Generate Report"
-4. Place seed in hardware
+1. Log in with a Google account
+2. Navigate to the dashboard
+3. Click the "Generate Report" button
+4. Place the seed in the hardware
 5. System captures image
 6. ML model analyzes seed
 7. Receive PDF report
@@ -371,7 +379,7 @@ Built with:
 
 ---
 
-**Last Updated**: February 9, 2026
+**Last Updated**: February 18, 2026
 **Status**: Production Ready
 **Maintained**: Active Development
 
