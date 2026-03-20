@@ -39,23 +39,110 @@ A comprehensive web application that enables farmers to generate detailed seed h
 - ✅ **Row Level Security** - User data protection
 - ✅ **Mobile Friendly** - Optimized for all screen sizes
 
+## 📋 Prerequisites
+
+Ensure you have the following installed:
+
+- Node.js ≥ 16.x  
+- npm ≥ 8.x  
+- Git  
+
+Check versions:
+
+```bash
+node -v
+npm -v
+git --version
+```
+
 ## 🚀 Quick Start
 
-### Installation
+### Clone the Repository
 ```bash
-# Clone the Repository
 git clone https://github.com/ins-vj/SAARG.git
 cd SAARG
-
-# Install dependencies
+```
+### Windows Setup
+#### 1. Install Dependencies
+```bash
 npm install
+```
 
-# Set up environment
-touch .env.local
+#### 2. Create Environment File
+
+##### Using Command Prompt (CMD):
+```cmd
+type nul > .env.local
+```
+
+##### Using PowerShell:
+```powershell
+New-Item .env.local
+```
+
+#### 3. Add Environment Variables
+
+Open `.env.local` and add:
+
+```env
 NEXT_PUBLIC_SUPABASE_URL=your_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
+```
 
-# Run development server
+#### 4. Run the Project
+```bash
+npm run dev
+```
+
+### macOS Setup
+
+#### 1. Install Dependencies
+```bash
+npm install
+```
+
+#### 2. Create Environment File
+```bash
+touch .env.local
+```
+
+#### 3. Add Environment Variables
+
+Open `.env.local` and add:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
+```
+
+#### 4. Run the Project
+```bash
+npm run dev
+```
+
+### Linux Setup
+
+#### 1. Install Dependencies
+```bash
+npm install
+```
+
+#### 2. Create Environment File
+```bash
+touch .env.local
+```
+
+#### 3. Add Environment Variables
+
+Open `.env.local` and add:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
+```
+
+#### 4. Run the Project
+```bash
 npm run dev
 ```
 
@@ -287,7 +374,12 @@ Proprietary and Confidential - All rights reserved
 
 ## 👥 Authors
 
-Created with Vercel v0 - Advanced AI-powered code generation
+- Sreechand Rayavarapu - 230001068
+- Vikrant Jakhar - 230001082
+- Kartik Hiranandani - 230001037
+- Gugulothu Sohan Naik - 230001029
+- Marupaka Rajavardhan - 230001053
+- Improved with Vercel v0 - Advanced AI-powered code generation
 
 ## 🙏 Acknowledgments
 
