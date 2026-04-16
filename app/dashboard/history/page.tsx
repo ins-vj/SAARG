@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { History, Download, Trash2 } from 'lucide-react'
+import { History, Download, Trash2, Eye } from 'lucide-react'
+import { formatDateToIST } from '@/lib/utils'
 
 interface Report {
   id: string
@@ -31,32 +32,63 @@ export default function HistoryPage() {
         return
       }
 
-      // TODO: Fetch reports from database
-      // const { data, error } = await supabase
-      //   .from('reports')
-      //   .select('*')
-      //   .eq('user_id', user.id)
-      //   .order('created_at', { ascending: false })
+      // Fetch reports from database
+      const { data, error } = await supabase
+        .from('reports')
+        .select('id, title, created_at, pdf_url')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
 
-      setReports([])
+      if (error) {
+        console.error('Error fetching reports:', error)
+        setReports([])
+      } else {
+        setReports(data || [])
+      }
       setLoading(false)
     }
 
     loadReports()
   }, [supabase, router])
 
-  const handleDownload = (report: Report) => {
+  const handleView = (report: Report) => {
     if (report.pdf_url) {
-      const link = document.createElement('a')
-      link.href = report.pdf_url
-      link.download = `${report.title}.pdf`
-      link.click()
+      window.open(report.pdf_url, '_blank')
+    }
+  }
+
+  const handleDownload = async (report: Report) => {
+    if (report.pdf_url) {
+      try {
+        const response = await fetch(report.pdf_url)
+        const blob = await response.blob()
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `${report.title}.pdf`
+        link.click()
+        window.URL.revokeObjectURL(url)
+      } catch (error) {
+        console.error('Download failed:', error)
+      }
     }
   }
 
   const handleDelete = async (reportId: string) => {
-    // TODO: Delete report from database
-    setReports(reports.filter((r) => r.id !== reportId))
+    try {
+      const { error } = await supabase
+        .from('reports')
+        .delete()
+        .eq('id', reportId)
+
+      if (error) {
+        console.error('Error deleting report:', error)
+      } else {
+        setReports(reports.filter((r) => r.id !== reportId))
+      }
+    } catch (err) {
+      console.error('Delete failed:', err)
+    }
   }
 
   if (loading) {
@@ -106,10 +138,18 @@ export default function HistoryPage() {
                   <div className="flex-1">
                     <h3 className="font-medium text-gray-900 dark:text-white">{report.title}</h3>
                     <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
-                      {new Date(report.created_at).toLocaleString()}
+                      {formatDateToIST(report.created_at)}
                     </p>
                   </div>
                   <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleView(report)}
+                    >
+                      <Eye className="w-4 h-4 mr-2" />
+                      View
+                    </Button>
                     <Button
                       variant="outline"
                       size="sm"

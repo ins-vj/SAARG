@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import jsPDF from 'jspdf'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
+import { formatDateTimeIST, formatDateOnlyIST, getCurrentTimestampISO } from '@/lib/utils'
 
 export async function POST(request: NextRequest) {
   try {
@@ -35,7 +36,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create a new PDF document
+    // Create PDF
     const pdf = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
@@ -46,44 +47,41 @@ export async function POST(request: NextRequest) {
     const pageHeight = pdf.internal.pageSize.getHeight()
     let yPosition = 20
 
-    // Add title
     pdf.setFontSize(20)
     pdf.text('Seed Health Analysis Report', pageWidth / 2, yPosition, { align: 'center' })
     yPosition += 15
 
-    // Add timestamp
     pdf.setFontSize(10)
     pdf.setTextColor(100)
-    pdf.text(`Generated: ${new Date().toLocaleString()}`, pageWidth / 2, yPosition, {
+    pdf.text(`Generated: ${formatDateTimeIST(new Date())}`, pageWidth / 2, yPosition, {
       align: 'center',
     })
     yPosition += 15
 
-    // Add captured image
     if (image) {
       try {
         pdf.addImage(image, 'JPEG', 20, yPosition, 170, 100)
         yPosition += 110
       } catch (err) {
-        console.error('Error adding image to PDF:', err)
+        console.error('Error adding image:', err)
       }
     }
 
-    // Add ML results
     pdf.setTextColor(0)
     pdf.setFontSize(12)
     pdf.text('Analysis Results:', 20, yPosition)
     yPosition += 10
 
     pdf.setFontSize(10)
+
     if (mlResult) {
-      // Display ML model results
       const resultText = [
-        `Health Score: ${mlResult.healthScore || 'N/A'}%`,
-        `Quality: ${mlResult.quality || 'N/A'}`,
-        `Germination Rate: ${mlResult.germinationRate || 'N/A'}%`,
-        `Moisture Level: ${mlResult.moistureLevel || 'N/A'}%`,
-        `Status: ${mlResult.status || 'Healthy'}`,
+        `Health Score: ${mlResult.confidence || 'N/A'}%`,
+        `Quality: ${mlResult.analysis?.quality || 'N/A'}`,
+        `Germination Rate: ${mlResult.mean_activity || 'N/A'}%`,
+        `Prediction: ${mlResult.prediction || 'N/A'}`,
+        `Status: ${mlResult.analysis?.status || 'Healthy'}`,
+        `Recommendation: ${mlResult.analysis?.recommendation || 'No recommendation'}`,
       ]
 
       resultText.forEach((text) => {
@@ -96,7 +94,7 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Add footer
+    // Footer
     yPosition = pageHeight - 10
     pdf.setFontSize(8)
     pdf.setTextColor(150)
@@ -104,19 +102,50 @@ export async function POST(request: NextRequest) {
       align: 'center',
     })
 
-    // Generate PDF as bytes
+    // Generate PDF
     const pdfBytes = pdf.output('arraybuffer')
 
-    // Save report to database
+    // ================= FIXED STORAGE PART =================
+    let pdfUrl: string | null = null
+
+    try {
+      // ✅ FIX: removed extra "reports/" prefix
+      const fileName = `${user.id}/seed-report-${Date.now()}.pdf`
+
+      const { data: uploadData, error: uploadError } = await supabase
+        .storage
+        .from('saarg_report_pdf')
+        .upload(fileName, new Blob([pdfBytes], { type: 'application/pdf' }), {
+          contentType: 'application/pdf',
+          upsert: false,
+        })
+
+      if (uploadError) {
+        console.error('Storage upload error:', uploadError)
+      } else {
+        const { data } = supabase
+          .storage
+          .from('saarg_report_pdf')
+          .getPublicUrl(fileName)
+        
+        pdfUrl = data.publicUrl
+        console.log('PDF uploaded:', pdfUrl)
+      }
+    } catch (storageError) {
+      console.error('Storage exception:', storageError)
+    }
+
+    // ================= DB SAVE (UNCHANGED) =================
     try {
       const { data: reportData, error: dbError } = await supabase
         .from('reports')
         .insert({
           user_id: user.id,
-          title: `Seed Analysis Report - ${new Date().toLocaleDateString()}`,
+          title: `Seed Analysis Report - ${formatDateOnlyIST(new Date())}`,
           image_data: image,
           ml_model_result: mlResult,
-          pdf_url: null, // Could upload to storage and save URL later
+          pdf_url: pdfUrl,
+          created_at: new Date().toISOString(),
         })
         .select()
         .single()
@@ -124,11 +153,10 @@ export async function POST(request: NextRequest) {
       if (dbError) {
         console.error('Database save error:', dbError)
       } else {
-        console.log('Report saved to database:', reportData)
+        console.log('Report saved:', reportData)
       }
     } catch (dbError) {
-      console.error('Failed to save to database:', dbError)
-      // Don't block PDF generation if database save fails
+      console.error('DB exception:', dbError)
     }
 
     return new NextResponse(pdfBytes, {
@@ -138,6 +166,7 @@ export async function POST(request: NextRequest) {
         'Content-Disposition': `attachment; filename="seed-report-${Date.now()}.pdf"`,
       },
     })
+
   } catch (error) {
     console.error('PDF generation error:', error)
     return NextResponse.json(

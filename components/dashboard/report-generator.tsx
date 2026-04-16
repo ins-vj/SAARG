@@ -1,22 +1,18 @@
 'use client'
 
-import { useState, useRef } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Loader2, Camera, Download, AlertCircle } from 'lucide-react'
+import { Camera, Download, AlertCircle } from 'lucide-react'
 import { HardwareDialog } from './hardware-dialog'
 import { PDFViewer } from './pdf-viewer'
 
 export function ReportGenerator() {
   const [showHardwareDialog, setShowHardwareDialog] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
-  const [capturedImage, setCapturedImage] = useState<string | null>(null)
+  const [hardwareData, setHardwareData] = useState<any>(null)
   const [mlResult, setMlResult] = useState<any>(null)
   const [pdfUrl, setPdfUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const supabase = createClient()
 
   const handleGenerateReport = async () => {
     setShowHardwareDialog(true)
@@ -34,69 +30,68 @@ export function ReportGenerator() {
     setError(null)
 
     try {
-      // Start camera capture
-      if (videoRef.current) {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'environment' },
-        })
-        videoRef.current.srcObject = stream
+      // Process hardware data that will be sent from the hardware device
+      // The hardware will POST to /api/ml-model endpoint with this data format
+      // For now, we'll wait and process when data arrives
+      await processHardwareData()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to process hardware data')
+      setIsProcessing(false)
+    }
+  }
 
-        // Wait for video to load
-        await new Promise((resolve) => {
-          videoRef.current!.onloadedmetadata = resolve
-        })
+  const processHardwareData = async () => {
+    try {
+      // Poll the API for hardware data with a timeout of 2 minutes
+      const maxAttempts = 120 // 120 attempts with 1-second intervals = 2 minutes
+      let attempts = 0
 
-        // Capture image after 2 seconds
-        await new Promise((resolve) => setTimeout(resolve, 2000))
+      while (attempts < maxAttempts) {
+        try {
+          const response = await fetch('/api/ml-model', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
 
-        if (canvasRef.current && videoRef.current) {
-          const ctx = canvasRef.current.getContext('2d')
-          if (ctx) {
-            ctx.drawImage(videoRef.current, 0, 0)
-            const imageData = canvasRef.current.toDataURL('image/jpeg')
-            setCapturedImage(imageData)
+          if (response.status === 200) {
+            // Data is available
+            const result = await response.json()
+            const hardwareResult = result.data
 
-            // Stop the stream
-            stream.getTracks().forEach((track) => track.stop())
+            setHardwareData(hardwareResult)
+            setMlResult(hardwareResult)
 
-            // Call ML model API
-            await callMLModel(imageData)
+            // Generate PDF with hardware data
+            await generatePDF(hardwareResult)
+            return
+          } else if (response.status === 202) {
+            // Still waiting for data, continue polling
+            attempts++
+            // Wait 1 second before next attempt
+            await new Promise((resolve) => setTimeout(resolve, 1000))
+          } else {
+            throw new Error('Failed to fetch hardware data')
           }
+        } catch (pollErr) {
+          console.log(`Attempt ${attempts + 1}/${maxAttempts}: Waiting for hardware data...`)
+          attempts++
+          // Wait 1 second before retrying
+          await new Promise((resolve) => setTimeout(resolve, 1000))
         }
       }
+
+      // Timeout reached - no data received from hardware
+      setError('Timeout: Hardware did not send data within 2 minutes. Please check your device connection.')
+      setIsProcessing(false)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to capture image')
+      setError(err instanceof Error ? err.message : 'Failed to process hardware data')
       setIsProcessing(false)
     }
   }
 
-  const callMLModel = async (imageData: string) => {
-    try {
-      // Replace with your actual ML model endpoint
-      const response = await fetch('/api/ml-model', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          image: imageData,
-        }),
-      })
-
-      if (!response.ok) throw new Error('ML model processing failed')
-
-      const result = await response.json()
-      setMlResult(result)
-
-      // Generate PDF
-      await generatePDF(imageData, result)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to process with ML model')
-      setIsProcessing(false)
-    }
-  }
-
-  const generatePDF = async (imageData: string, mlResult: any) => {
+  const generatePDF = async (hardwareResult: any) => {
     try {
       const response = await fetch('/api/generate-pdf', {
         method: 'POST',
@@ -104,8 +99,9 @@ export function ReportGenerator() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          image: imageData,
-          mlResult: mlResult,
+          // Send with correct field names expected by the API
+          image: null, // No image data for now
+          mlResult: hardwareResult,
         }),
       })
 
@@ -131,7 +127,7 @@ export function ReportGenerator() {
   }
 
   const handleReset = () => {
-    setCapturedImage(null)
+    setHardwareData(null)
     setMlResult(null)
     setPdfUrl(null)
     setError(null)
@@ -160,9 +156,9 @@ export function ReportGenerator() {
     return (
       <div className="flex flex-col items-center justify-center py-12 space-y-4">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
-        <p className="text-gray-600 dark:text-gray-400">Processing seed analysis...</p>
+        <p className="text-gray-600 dark:text-gray-400">Waiting for hardware data...</p>
         <p className="text-sm text-gray-500 dark:text-gray-500">
-          This may take a few moments. Do not close the page.
+          Please ensure your hardware device has sent the data. This will timeout after 2 minutes.
         </p>
       </div>
     )
@@ -190,10 +186,6 @@ export function ReportGenerator() {
           Generate Report
         </Button>
       </div>
-
-      {/* Hidden elements for camera capture */}
-      <video ref={videoRef} style={{ display: 'none' }} autoPlay playsInline />
-      <canvas ref={canvasRef} style={{ display: 'none' }} width={640} height={480} />
 
       <HardwareDialog
         isOpen={showHardwareDialog}
