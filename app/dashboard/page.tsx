@@ -85,7 +85,7 @@ export default function DashboardPage() {
       let successRate = '—'
       if (allReports && allReports.length > 0) {
         const goodCount = allReports.filter(
-          (r) => r.ml_model_result?.analysis?.status === 'Good'
+          (r) => r.ml_model_result?.analysis?.status === 'Normal'
         ).length
         successRate = `${Math.round((goodCount / allReports.length) * 100)}%`
       }
