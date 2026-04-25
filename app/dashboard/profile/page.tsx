@@ -9,13 +9,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Loader2, User } from 'lucide-react'
+import { Loader2, User, CheckCircle2, X } from 'lucide-react'
 
 export default function ProfilePage() {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [fullName, setFullName] = useState('')
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false)
   const router = useRouter()
   const supabase = createClient()
 
@@ -30,7 +31,6 @@ export default function ProfilePage() {
         return
       }
 
-      // Fetch full_name from profiles table
       const { data: profile } = await supabase
         .from('profiles')
         .select('full_name')
@@ -45,21 +45,25 @@ export default function ProfilePage() {
     loadUserData()
   }, [supabase, router])
 
+  // Auto-dismiss popup after 3 seconds
+  useEffect(() => {
+    if (showSuccessPopup) {
+      const timer = setTimeout(() => setShowSuccessPopup(false), 3000)
+      return () => clearTimeout(timer)
+    }
+  }, [showSuccessPopup])
+
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
 
     try {
-      // Update auth user metadata
       const { error: authError } = await supabase.auth.updateUser({
-        data: {
-          full_name: fullName,
-        },
+        data: { full_name: fullName },
       })
 
       if (authError) throw authError
 
-      // Upsert into profiles table
       const { error: profileError } = await supabase
         .from('profiles')
         .upsert({
@@ -72,6 +76,7 @@ export default function ProfilePage() {
       if (profileError) throw profileError
 
       setUser({ ...user, user_metadata: { ...user.user_metadata, full_name: fullName } })
+      setShowSuccessPopup(true) // ✅ Trigger popup
     } catch (error) {
       console.error('Error updating profile:', error)
     } finally {
@@ -89,6 +94,21 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-2xl">
+
+      {/* ✅ Success Popup Toast */}
+      {showSuccessPopup && (
+        <div className="fixed top-6 right-6 z-50 flex items-center gap-3 bg-white dark:bg-gray-900 border border-green-500 text-gray-900 dark:text-white px-5 py-4 rounded-xl shadow-xl animate-in slide-in-from-top-2 duration-300">
+          <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0" />
+          <span className="font-medium text-sm">Username changed successfully!!!</span>
+          <button
+            onClick={() => setShowSuccessPopup(false)}
+            className="ml-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
           <User className="w-8 h-8" />

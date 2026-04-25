@@ -138,7 +138,7 @@ export default function HistoryPage() {
                   <div className="flex-1">
                     <h3 className="font-medium text-gray-900 dark:text-white">{report.title}</h3>
                     <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
-                      {formatDateToIST(report.created_at)}
+                      {/* {formatDateToIST(report.created_at)} */}
                     </p>
                   </div>
                   <div className="flex gap-2">
