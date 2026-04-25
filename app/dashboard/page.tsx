@@ -93,7 +93,7 @@ export default function DashboardPage() {
       setStats({
         totalReports: monthlyCount ?? 0,
         lastAnalysisDate: lastReport?.created_at ?? null,
-        successRate,
+        successRate: successRate,
       })
 
       setLoading(false)
