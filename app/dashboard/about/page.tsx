@@ -9,7 +9,7 @@ export default function AboutPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
           <HelpCircle className="w-8 h-8" />
-          About FarmReport
+          About SAARG
         </h1>
         <p className="text-gray-600 dark:text-gray-400 mt-2">
           Learn about our seed health analysis platform
@@ -26,7 +26,7 @@ export default function AboutPage() {
           </CardHeader>
           <CardContent>
             <p className="text-gray-600 dark:text-gray-400">
-              FarmReport is dedicated to helping farmers optimize their crop yields by providing
+              SAARG is dedicated to helping farmers optimize their crop yields by providing
               advanced seed health analysis using cutting-edge machine learning technology. We
               believe that accurate, real-time data about seed quality is crucial for successful
               agriculture.
@@ -169,7 +169,7 @@ export default function AboutPage() {
               </div>
               <div className="pt-4">
                 <p className="text-gray-600 dark:text-gray-400">
-                  For support or questions, please contact our team at support@farmreport.com
+                  For support or questions, please contact our team at support@SAARG.com
                 </p>
               </div>
             </div>

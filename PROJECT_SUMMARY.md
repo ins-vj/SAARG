@@ -1,8 +1,8 @@
-# FarmReport - Project Summary
+# SAARG - Project Summary
 
 ## 🎯 Project Overview
 
-FarmReport is a comprehensive **farmer-focused seed health analysis platform** built with modern web technologies. It enables farmers to generate detailed seed health reports using hardware integration, machine learning, and professional PDF reports.
+SAARG is a comprehensive **farmer-focused seed health analysis platform** built with modern web technologies. It enables farmers to generate detailed seed health reports using hardware integration, machine learning, and professional PDF reports.
 
 ## ✨ Key Features Implemented
 
@@ -24,7 +24,7 @@ FarmReport is a comprehensive **farmer-focused seed health analysis platform** b
 - ✅ **Dashboard Home** - Main hub with report generation
 - ✅ **History** - View and manage previous reports
 - ✅ **Profile** - Manage account settings and preferences
-- ✅ **About** - Information about FarmReport and features
+- ✅ **About** - Information about SAARG and features
 
 ### 4. **Report Generation**
 - ✅ Hardware verification dialog

@@ -9,7 +9,7 @@ const geist = Geist({ subsets: ['latin'] })
 const geistMono = Geist_Mono({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'FarmReport - Seed Health Analysis',
+  title: 'SAARG - Seed Health Analysis',
   description: 'Advanced seed health analysis and reporting system for farmers',
   generator: 'v0.app',
 }

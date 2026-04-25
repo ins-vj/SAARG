@@ -53,7 +53,7 @@ export function Sidebar() {
     <>
       <div className="flex items-center gap-2 px-4 py-6 border-b border-gray-200 dark:border-gray-800">
         <Leaf className="w-6 h-6 text-green-600" />
-        <h1 className="text-xl font-bold text-gray-900 dark:text-white">FarmReport</h1>
+        <h1 className="text-xl font-bold text-gray-900 dark:text-white">SAARG</h1>
       </div>
 
       <nav className="flex-1 px-4 py-6 space-y-2">

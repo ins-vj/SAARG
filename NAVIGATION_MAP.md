@@ -1,10 +1,10 @@
-# FarmReport - Application Navigation Map
+# SAARG - Application Navigation Map
 
 ## 🗺️ Application Flow Diagram
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                     FarmReport Application                          │
+│                     SAARG Application                          │
 │                     Navigation Structure                            │
 └─────────────────────────────────────────────────────────────────────┘
 

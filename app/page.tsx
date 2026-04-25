@@ -88,7 +88,7 @@ export default function LoginPage() {
           <div className="hidden lg:flex flex-col justify-center px-8 py-12">
             <div className="flex items-center gap-2 mb-8">
               <Leaf className="w-8 h-8 text-green-600" />
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">FarmReport</h1>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">SAARG</h1>
             </div>
             <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">
               Advanced Seed Health Analysis

@@ -1,8 +1,8 @@
-# FarmReport - Setup Guide
+# SAARG - Setup Guide
 
 ## Overview
 
-FarmReport is a comprehensive farmer management website that helps farmers generate advanced seed health analysis reports. The application includes:
+SAARG is a comprehensive farmer management website that helps farmers generate advanced seed health analysis reports. The application includes:
 
 - **Authentication**: Gmail login + email/password signup via Supabase
 - **Dashboard**: Central hub with sidebar navigation
@@ -117,7 +117,7 @@ Visit `http://localhost:3000` in your browser.
 - **Dashboard** (`/dashboard`): Main hub with report generation
 - **History** (`/dashboard/history`): View all previous reports
 - **Profile** (`/dashboard/profile`): Manage account settings
-- **About** (`/dashboard/about`): Learn about FarmReport
+- **About** (`/dashboard/about`): Learn about SAARG
 
 ## ML Model Integration
 
@@ -234,7 +234,7 @@ npm run start
 
 ## Support
 
-For questions or issues, contact support@farmreport.com
+For questions or issues, contact support@SAARG.com
 
 ## License
 
