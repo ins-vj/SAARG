@@ -30,8 +30,15 @@ export default function ProfilePage() {
         return
       }
 
+      // Fetch full_name from profiles table
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('full_name')
+        .eq('id', user.id)
+        .single()
+
       setUser(user)
-      setFullName(user.user_metadata?.full_name || '')
+      setFullName(profile?.full_name || user.user_metadata?.full_name || '')
       setLoading(false)
     }
 
@@ -43,13 +50,26 @@ export default function ProfilePage() {
     setSaving(true)
 
     try {
-      const { error } = await supabase.auth.updateUser({
+      // Update auth user metadata
+      const { error: authError } = await supabase.auth.updateUser({
         data: {
           full_name: fullName,
         },
       })
 
-      if (error) throw error
+      if (authError) throw authError
+
+      // Upsert into profiles table
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .upsert({
+          id: user.id,
+          email: user.email,
+          full_name: fullName,
+          updated_at: new Date().toISOString(),
+        })
+
+      if (profileError) throw profileError
 
       setUser({ ...user, user_metadata: { ...user.user_metadata, full_name: fullName } })
     } catch (error) {
