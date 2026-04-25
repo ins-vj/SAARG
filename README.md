@@ -7,6 +7,9 @@ A comprehensive web application that enables farmers to generate detailed seed h
 ![License](https://img.shields.io/badge/license-proprietary-red)
 
 ## 🌐 Live Website
+
+Click the following button to access SAARG live website:
+
 **[![SAARG](https://img.shields.io/badge/🌐%20Live%20Website-Visit%20Now-green?style=for-the-badge)](https://saarg.vercel.app/)**
 
 ## 📸 Preview
