@@ -1,4 +1,4 @@
-# 🌾 SAARG - Seed Analysis And Report Generator
+# 🌾 SAARG - Seed Analyzer And Report Generator
 
 A comprehensive web application that enables farmers to generate detailed seed health analysis reports using hardware integration, machine learning, and professional PDF generation.
 
