@@ -62,7 +62,9 @@ git --version
 git clone https://github.com/ins-vj/SAARG.git
 cd SAARG
 ```
+
 ### Windows Setup
+
 #### 1. Install Dependencies
 ```bash
 npm install
@@ -85,8 +87,10 @@ New-Item .env.local
 Open `.env.local` and add:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=your_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
+@"
+NEXT_PUBLIC_SUPABASE_URL=https://nmhzhrgojcbgnxggacst.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5taHpocmdvamNiZ254Z2dhY3N0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA2MjE1MTgsImV4cCI6MjA4NjE5NzUxOH0.XDDOkpb9Dew-M3blJnQmqQZcrH-hGuIJihBfiyWvSs4
+"@ | Out-File -FilePath .env.local -Encoding UTF8
 ```
 
 #### 4. Run the Project
@@ -111,8 +115,10 @@ touch .env.local
 Open `.env.local` and add:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=your_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
+@"
+NEXT_PUBLIC_SUPABASE_URL=https://nmhzhrgojcbgnxggacst.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5taHpocmdvamNiZ254Z2dhY3N0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA2MjE1MTgsImV4cCI6MjA4NjE5NzUxOH0.XDDOkpb9Dew-M3blJnQmqQZcrH-hGuIJihBfiyWvSs4
+"@ | Out-File -FilePath .env.local -Encoding UTF8
 ```
 
 #### 4. Run the Project
@@ -137,8 +143,10 @@ touch .env.local
 Open `.env.local` and add:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=your_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
+@"
+NEXT_PUBLIC_SUPABASE_URL=https://nmhzhrgojcbgnxggacst.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5taHpocmdvamNiZ254Z2dhY3N0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA2MjE1MTgsImV4cCI6MjA4NjE5NzUxOH0.XDDOkpb9Dew-M3blJnQmqQZcrH-hGuIJihBfiyWvSs4
+"@ | Out-File -FilePath .env.local -Encoding UTF8
 ```
 
 #### 4. Run the Project
@@ -374,11 +382,11 @@ Proprietary and Confidential - All rights reserved
 
 ## 👥 Authors
 
+- Gugulothu Sohan Naik - 230001029
+- Kartik Hiranandani - 230001037
+- Marupaka Rajavardhan - 230001053
 - Sreechand Rayavarapu - 230001068
 - Vikrant Jakhar - 230001082
-- Kartik Hiranandani - 230001037
-- Gugulothu Sohan Naik - 230001029
-- Marupaka Rajavardhan - 230001053
 - Improved with Vercel v0 - Advanced AI-powered code generation
 
 ## 🙏 Acknowledgments
