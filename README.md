@@ -392,7 +392,7 @@ Proprietary and Confidential - All rights reserved
 - Kartik Hiranandani - 230001037
 - Marupaka Rajavardhan - 230001053
 - Sreechand Rayavarapu - 230001068
-- Vikrant Jakhar - 230001082
+- Vikrant - 230001082
 - Improved with Vercel v0 - Advanced AI-powered code generation
 
 ## 🙏 Acknowledgments
